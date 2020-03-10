@@ -62,8 +62,8 @@ public class AnnualController {
 	 * 测试get请求在gateway中日志打印
 	 * */
 	@GetMapping(value="/testGet")
-	public String testGet(@RequestParam String name) {
-		log_.info("name is {}",name);
-		return "annual say hello to daily user:"+name;
+	public String testGet(@RequestParam String name,@RequestParam String code) {
+		log_.info("name is {},code is {}",name,code);
+		return "annual say hello to daily user:"+name+",code is "+code;
 	}
 }

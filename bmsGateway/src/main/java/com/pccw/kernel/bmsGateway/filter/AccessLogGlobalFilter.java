@@ -22,6 +22,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.http.server.reactive.ServerHttpResponseDecorator;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -36,16 +37,30 @@ public class AccessLogGlobalFilter implements GlobalFilter , Ordered {
 	
 	private Logger log_ = LoggerFactory.getLogger(AccessLogGlobalFilter.class);
 	
-	private static final String REQUEST_PREFIX = "{'Request Info': { ";
+	private static final String REQUEST_PREFIX = "{\"Request Info\": { ";
 	 
     private static final String REQUEST_TAIL = " }";
  
-    private static final String RESPONSE_PREFIX = "{'Response Info':{ ";
+    private static final String RESPONSE_PREFIX = "{\"Response Info\":{ ";
  
     private static final String RESPONSE_TAIL = " }";
  
     //记录请求开始时间
     private static final String START_TIME = "startTime";
+    
+    private static final String POST = "POST";
+    
+    private static final String GET = "GET";
+    //引号
+    private static final String JSON_PREFIX = "\"";
+    //冒号
+    private static final String JSON_INDEX = ":";
+    //逗号
+    private static final String JSON_PART = ",";
+    //首行标志
+    private static final String FIRST_LINE = "F";
+    //尾行标志
+    private static final String LAST_LINE = "L";
  
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -59,27 +74,41 @@ public class AccessLogGlobalFilter implements GlobalFilter , Ordered {
         URI url = requestDecorator.getURI();
         HttpHeaders headers = requestDecorator.getHeaders();
         Flux<DataBuffer> body = requestDecorator.getBody();
-        //读取requestBody传参
-        AtomicReference<String> requestBody = new AtomicReference<>("");
-        body.subscribe(buffer -> {
-            CharBuffer charBuffer = StandardCharsets.UTF_8.decode(buffer.asByteBuffer());
-            requestBody.set(charBuffer.toString());
-        });
-        String requestParams = requestBody.get();
+        String requestParams = null;
+        if(method.matches(GET)) {
+        	StringBuilder param = new StringBuilder();
+        	MultiValueMap<String, String> queryParams = request.getQueryParams();
+        	queryParams.entrySet().forEach(entry->{
+        		param.append(entry.getKey()).append(JSON_INDEX).append(entry.getValue()).append(JSON_PART);
+        	});
+        	requestParams = param.toString();
+        	//截取掉最后一个逗号
+        	if(requestParams.contains(JSON_PART)) {
+        		requestParams = requestParams.substring(0,requestParams.length()-1);
+        	}
+        }else if(method.matches(POST)) {
+        	//读取requestBody传参
+            AtomicReference<String> requestBody = new AtomicReference<>("");
+            body.subscribe(buffer -> {
+                CharBuffer charBuffer = StandardCharsets.UTF_8.decode(buffer.asByteBuffer());
+                requestBody.set(charBuffer.toString());
+            });
+            requestParams = requestBody.get();
+        }
         String realIp = headers.getFirst("X-Real-IP");
         if(StringUtils.isBlank(realIp)) {
         	realIp = requestDecorator.getRemoteAddress().toString();
         }
         if(StringUtils.isBlank(requestParams)) {
-        	requestParams = "''";
+        	requestParams = StringUtils.join(JSON_PREFIX,JSON_PREFIX);
         }
         normalMsg.append(REQUEST_PREFIX);
-        normalMsg.append("'header':").append(headers);
-        normalMsg.append(",'params':").append(requestParams);
-        normalMsg.append(",'address':").append(address.getHostName() + address.getPort());
-        normalMsg.append(",'method':").append(method.name());
-        normalMsg.append(",'url':").append(url.getPath());
-        normalMsg.append(REQUEST_TAIL);
+        normalMsg.append(joinParam("header",headers,FIRST_LINE));
+        normalMsg.append(joinParam("params",requestParams,null));
+        normalMsg.append(joinParam("address",address.getHostName() + address.getPort(),null));
+        normalMsg.append(joinParam("method",method.name(),null));
+        normalMsg.append(joinParam("url",url.getPath(),LAST_LINE));
+        normalMsg.append(REQUEST_TAIL).append(JSON_PART);
  
         ServerHttpResponse response = exchange.getResponse();
  
@@ -97,10 +126,10 @@ public class AccessLogGlobalFilter implements GlobalFilter , Ordered {
                         //释放内存
                         DataBufferUtils.release(dataBuffer);
                         String responseResult = new String(content, Charset.forName("UTF-8"));
-                        normalMsg.append("'status':").append(this.getStatusCode());
-                        normalMsg.append(",'header':").append(this.getHeaders());
-                        normalMsg.append(",'responseResult':").append(responseResult);
-                        normalMsg.append(RESPONSE_TAIL);
+                        normalMsg.append(joinParam("status",this.getStatusCode(),FIRST_LINE));
+                        normalMsg.append(joinParam("header",this.getHeaders(),null));
+                        normalMsg.append(joinParam("responseResult",responseResult,LAST_LINE));
+                        normalMsg.append(RESPONSE_TAIL).append(RESPONSE_TAIL);
                         log_.info(normalMsg.toString());
                         //将response写回到请求中(这里不写的话feign调用会在调用方出现read time out 异常)
                         byte[] uppedContent = new String(content, Charset.forName("UTF-8")).getBytes();
@@ -127,5 +156,24 @@ public class AccessLogGlobalFilter implements GlobalFilter , Ordered {
     @Override
     public int getOrder() {
         return -2;
+    }
+    
+    /**
+     * 拼接返回参数
+     * @param key 参数key
+     * @param value 参数值
+     * @param lineFlag 行标记
+     * @return String
+     * */
+    public String joinParam(String key,Object value,String lineFlag) {
+    	StringBuilder buf = new StringBuilder();
+    	if(FIRST_LINE.equals(lineFlag)) {
+    		buf.append(JSON_PREFIX).append(key).append(JSON_PREFIX).append(JSON_INDEX).append(JSON_PREFIX).append(value).append(JSON_PREFIX).append(JSON_PART);
+    	}else if(LAST_LINE.equals(lineFlag)) {
+    		buf.append(JSON_PREFIX).append(key).append(JSON_PREFIX).append(JSON_INDEX).append(JSON_PREFIX).append(value).append(JSON_PREFIX);
+    	}else {
+    		buf.append(JSON_PREFIX).append(key).append(JSON_PREFIX).append(JSON_INDEX).append(JSON_PREFIX).append(value).append(JSON_PREFIX).append(JSON_PART);
+    	}
+    	return buf.toString();
     }
 }

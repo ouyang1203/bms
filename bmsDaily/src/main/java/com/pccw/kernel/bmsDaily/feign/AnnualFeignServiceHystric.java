@@ -16,9 +16,9 @@ public class AnnualFeignServiceHystric implements AnnualFeignService{
 	}
 
 	@Override
-	public String testAnnualGet(String name) {
-		log_.info("daily param is {}",name);
-		return "daily param is "+name+",request fail ,Hystric auto";
+	public String testAnnualGet(String name,String code) {
+		log_.info("daily param is {},code is {}",name,code);
+		return "daily param name is "+name+",code is "+code+",request fail ,Hystric auto";
 	}
 
 }

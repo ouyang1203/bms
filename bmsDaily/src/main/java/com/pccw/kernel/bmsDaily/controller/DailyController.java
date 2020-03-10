@@ -57,8 +57,8 @@ public class DailyController {
 		return "8";
 	}
 	@GetMapping(value="/testGet")
-	public String testGet(@RequestParam String name) {
-		return annualFeignService.testAnnualGet(name);
+	public String testGet(@RequestParam String name,@RequestParam String code) {
+		return annualFeignService.testAnnualGet(name,code);
 	}
 	
 }

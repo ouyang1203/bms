@@ -18,6 +18,6 @@ public interface AnnualFeignService {
 	 * 测试日常调用年度get方法在gateway中日志输出情况
 	 * */
 	@GetMapping(value="/annual_service/annual/testGet")
-	public String testAnnualGet(@RequestParam String name);
+	public String testAnnualGet(@RequestParam String name,@RequestParam String code);
 	
 }
