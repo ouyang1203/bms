@@ -1,0 +1,10 @@
+server:
+  port: 5554
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${security.user.name}:${security.user.password}@instance1:1111/eureka/,http://${security.user.name}:${security.user.password}@instance2:1112/eureka/
+info:
+  app:
+    name: spring-cloud-gateway-instance2
+    version: 1.0.0

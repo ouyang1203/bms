@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pccw.kernel.bmsGateway.mapper.GatewayRouteMapper" >
+    <resultMap id="gatewayRouteVo" type="com.pccw.kernel.bmsGateway.vo.GatewayRouteVo" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="route_id" property="routeId" jdbcType="VARCHAR" />
+        <result column="route_uri" property="routeUri" jdbcType="VARCHAR" />
+        <result column="route_order" property="routeOrder" jdbcType="BIGINT" />
+        <result column="predicates" property="predicates" jdbcType="VARCHAR" />
+        <result column="filters" property="filters" jdbcType="VARCHAR" />
+        <result column="route_desc" property="routeDesc" jdbcType="VARCHAR" />
+        <result column="route_enable" property="routeEnable" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+        <result column="updated_by" property="updatedBy" jdbcType="VARCHAR" />
+    </resultMap>
+     
+    <select id="findAll" resultMap="gatewayRouteVo"  >
+       SELECT
+       *
+       FROM gateway_routes
+    </select>
+ 
+    <select id="findGatewayRouteById" parameterType="java.lang.Integer" resultMap="gatewayRouteVo" >
+       SELECT
+       *
+       FROM gateway_routes
+       WHERE id = #{id}
+    </select>
+ 
+    <insert id="addGatewayRoute" useGeneratedKeys="true" keyProperty="id">
+       INSERT INTO
+            gateway_routes
+            (route_id,route_uri,route_order,predicates,filters,route_desc,route_enable,create_time,update_time,created_by,updated_by)
+        VALUES
+            (#{routeId}, #{routeUri}, #{routeOrder},#{predicates},#{filters},#{routeDesc},#{routeEnable},#{createTime},#{updateTime},#{createdBy},#{updatedBy})
+    </insert>
+     
+    <delete id="deleteGatewayRoute" parameterType="java.lang.Integer" >
+       DELETE FROM
+             gateway_routes
+       WHERE
+             id =#{id}
+    </delete>
+    
+    <update id="updateGatewayRoute">
+    	UPDATE
+    		gateway_routes
+    	SET 
+    		route_id = #{routeId},
+    		route_uri = #{routeUri},
+    		route_order = #{routeOrder},
+    		predicates = #{predicates},
+    		filters = #{filters},
+    		route_desc = #{routeDesc},
+    		route_enable = #{routeEnable},
+    		update_time = #{updateTime},
+    		updated_by = #{updatedBy}
+    	WHERE
+    		id = #{id}
+    </update>
+ 
+</mapper>

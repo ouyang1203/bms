@@ -1,0 +1,84 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.pccw.kernel</groupId>
+  <artifactId>bms</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>bms</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<!--     Edgware.SR1 --> 
+    <springcloud.version>Finchley.RELEASE</springcloud.version>
+    <fastjson.version>1.2.28</fastjson.version>
+    <lombok.version>1.18.12</lombok.version>
+  </properties>
+  
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <!--     1.5.3.RELEASE --> 
+	<version>2.0.3.RELEASE</version>
+    <relativePath/> <!-- lookup parent from repository -->
+  </parent>
+    <dependencyManagement>
+    <dependencies>
+      <dependency>
+	    <groupId>org.springframework.cloud</groupId>
+	    <artifactId>spring-cloud-dependencies</artifactId>
+	    <version>${springcloud.version}</version>
+	    <type>pom</type>
+	    <scope>import</scope>
+	   </dependency>
+     </dependencies>
+  </dependencyManagement>
+  <dependencies>
+  	<dependency>
+       <groupId>org.springframework.cloud</groupId>
+<!--        <artifactId>spring-cloud-starter-feign</artifactId>--><!-- springboot1.x -->
+		<artifactId>spring-cloud-starter-openfeign</artifactId><!-- springboot2.x -->
+    </dependency>
+	<dependency>
+        <groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+	</dependency>
+	<!-- 	开启gateway自带的endpoint -->
+	<dependency>
+	    <groupId>org.springframework.boot</groupId>
+	    <artifactId>spring-boot-starter-actuator</artifactId>
+	</dependency>
+	<!-- 	开启gateway自带的endpoint -->
+	<dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-redis</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>${fastjson.version}</version>
+    </dependency>
+<!-- 	<dependency> -->
+<!-- 	    <groupId>org.projectlombok</groupId> -->
+<!-- 	    <artifactId>lombok</artifactId> -->
+<!-- 	    <version>${lombok.version}</version> -->
+<!-- 	    <scope>provided</scope> -->
+<!-- 	</dependency> -->
+    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <modules>
+  	<module>bmsEurzka</module>
+  	<module>bmsAnnual</module>
+  	<module>bmsDaily</module>
+  	<module>gateway</module>
+  	<module>bmsGateway</module>
+  </modules>
+</project>
