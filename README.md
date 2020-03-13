@@ -9,4 +9,4 @@
 ### 4、删除路由（无界面）：http://localhost:5555/delRoute，请求参数（参数中的id为mysql记录主键，route_id为定义的路由ID）：{"id":"5","route_id":"test"}，请求方法：POST；
 ### 5、更新路由（无界面）：http://localhost:5555/updateRoute，请求参数：{"gateway_routes":{"id":"6","routeId":"test_v2","routeUri":"lb://TEST2","routeOrder":0,"predicates":[{"name":"Path","args":{"pattern":"/test/test/**"}}],"filters":[{"name":"StripPrefix","args":{"_genkey_0":"1"}}],"route_enable":"Y","created_by":"222","updated_by":"222"}}，请求方法：POST
 ## 5、服务间调用均通过feign调用gateway中定义的路由实现：localhost:3333/daily/dailyAmountCheck（目前测试的地址，通过日常模块调用年度模块），http://localhost:4444/annual/checkAnnualAmount（通过年度调用日常模块）
-## 6、新增OAuth2模块颁发token用于后续的统一权限管理
+## 6、新增OAuth2模块颁发token用于后续的统一权限管理http://localhost:3355/oauth/token,用于获取token
