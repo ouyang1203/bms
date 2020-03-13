@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: instance1
+  application:
+    name: register
+  security:
+    user:
+      name: ouyang
+      password: ouyang
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+logging:
+  config: classpath:log.xml
+  level: 
+    org:
+      springframework:
+        cloud: TRACE

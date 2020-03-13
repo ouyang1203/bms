@@ -1,0 +1,49 @@
+spring:
+  profiles:
+    active: instance1
+  application:
+    name: oauth2
+  datasource:
+     username: root
+     password: oyh1203oy
+     url: jdbc:mysql://localhost:3306/bms_oauth2?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+     driver-class-name: com.mysql.jdbc.Driver
+  security:
+    user:
+      name: ouyang
+      password: ouyang
+  redis:
+     #Redis服务器地址  
+     host: 127.0.0.1
+     #Redis服务器端口
+     port: 6379
+     #Redis服务器密码
+     requirePass: oyh1203
+         #超时时间
+     timeout: 3000
+     pool:
+             # 连接池最大连接数（使用负值表示没有限制） 
+       max-active: 100
+             #连接池最大阻塞等待时间（使用负值表示没有限制）
+       max-wait: 300000
+            # 连接池中的最大空闲连接 
+       max-idle: 10
+            # 连接池中的最小空闲连接 
+       min-idle: 0
+eureka:
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+logging:
+  config: classpath:log.xml
+  level: 
+    org:
+      springframework:
+        cloud: TRACE
+#mybatis:
+  #mapper-locations: classpath:mapper/*.xml
+oauth2:
+  token:
+    validity:
+      #secends: 3000000
+      secends: 10

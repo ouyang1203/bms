@@ -8,22 +8,22 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <groupId>com.pccw.kernel</groupId>
-  <artifactId>bmsEurzka</artifactId>
+  <artifactId>bmsOAuth2</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>bmsEurzka</name>
+  <name>bmsOAuth2</name>
   <url>http://maven.apache.org</url>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <dependencies>
-      <dependency>
-        <groupId>org.springframework.cloud</groupId>
-		<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
+  	<dependency>
+  		 <groupId>org.springframework.cloud</groupId>
+       <artifactId>spring-cloud-starter-oauth2</artifactId>
+  	</dependency>
+  	<dependency>
+    	<groupId>org.springframework.boot</groupId>
+    	<artifactId>spring-boot-starter-jdbc</artifactId>
     </dependency>
-<!--     <dependency> -->
-<!-- 	     <groupId>org.springframework.cloud</groupId> -->
-<!-- 	     <artifactId>spring-cloud-starter-security</artifactId> -->
-<!--     </dependency> -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

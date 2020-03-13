@@ -1,0 +1,10 @@
+server:
+  port: 3355
+info:
+  app:
+    name: spring-cloud-oauth-instance1
+    version: 1.0.0
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${spring.security.user.name}:${spring.security.user.password}@instance1:1111/eureka/,http://${spring.security.user.name}:${spring.security.user.password}@instance2:1112/eureka/

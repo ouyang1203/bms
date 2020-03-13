@@ -83,7 +83,7 @@ hystrix:
         isolation:
           strategy: SEMAPHORE
           thread:
-            timeoutInMilliseconds: 2000
+            timeoutInMilliseconds: 60000
 mybatis:
   mapper-locations: classpath:mapper/*.xml 
 #启用监控
