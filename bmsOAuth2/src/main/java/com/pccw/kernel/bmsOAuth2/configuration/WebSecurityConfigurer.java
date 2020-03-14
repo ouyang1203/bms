@@ -13,19 +13,26 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.pccw.kernel.bmsOAuth2.service.Oauth2UserDetailsService;
 
+/**
+ * 设置不同加密方式(org.springframework.security.crypto.factory.PasswordEncoderFactories中提供了加密方式)
+ * bcrypt,ldap,MD4,MD5,noop,pbkdf2,scrypt,SHA-1,SHA-256,sha256
+ * */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, proxyTargetClass = true)
 public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter{
+	
 	@Autowired
 	private Oauth2UserDetailsService oauth2UserDetailsService;
 
 	 @Override
 	 protected void configure(HttpSecurity http) throws Exception {
-		 http.csrf().disable();
-	    http.requestMatchers().antMatchers("/oauth/**")
-	    .and()
-	    .authorizeRequests()
-	    .antMatchers("/oauth/**").authenticated();
+		 http
+		 	.authorizeRequests()
+		 	.antMatchers("/actuator/","/oauth/**","/oauth/authorize").permitAll()
+		 	.anyRequest().authenticated()
+		 	.and().formLogin().permitAll()
+		 	.and().csrf().disable();
+		 
 	 }
 
 
@@ -46,6 +53,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter{
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	/**
+	 * 设置用户信息校验实现类
+	 * */
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(oauth2UserDetailsService);

@@ -55,7 +55,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         // 配置TokenServices参数
         DefaultTokenServices tokenServices = new DefaultTokenServices();
         tokenServices.setTokenStore(endpoints.getTokenStore());
-        tokenServices.setSupportRefreshToken(false);
+        //设置支持refresh_token模式,默认值为false,不支持,需要设置为true
+        tokenServices.setSupportRefreshToken(true);
         tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
         tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
         //设置token失效时间

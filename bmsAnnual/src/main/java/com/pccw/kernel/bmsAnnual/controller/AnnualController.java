@@ -38,7 +38,10 @@ public class AnnualController {
 	@PostMapping(value="/calAnnualAmount")
 	public String calAnnualAmount(@RequestBody String dailyParam) {
 		log_.info("daily servce post params is :{}",dailyParam);
-		return "15";
+		JSONObject result = new JSONObject();
+		result.put("error_flag", "N");
+		result.put("data", 15);
+		return result.toString();
 	}
 	/**
 	 * 年度金额校验

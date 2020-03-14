@@ -54,7 +54,10 @@ public class DailyController {
 	@PostMapping(value="/calDailyAmount")
 	public String calDailyAmount(@RequestBody String annualparam) {
 		log_.info("annualparam is {}",annualparam);
-		return "8";
+		JSONObject result = new JSONObject();
+		result.put("error_flag", "N");
+		result.put("data", 8);
+		return result.toString();
 	}
 	@GetMapping(value="/testGet")
 	public String testGet(@RequestParam String name,@RequestParam String code) {

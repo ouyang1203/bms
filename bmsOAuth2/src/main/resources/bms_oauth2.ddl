@@ -62,4 +62,6 @@ additionalInformation VARCHAR(4096),
 autoApproveScopes VARCHAR(128)
 );
 
-insert into oauth_client_details (client_id,scope,client_secret,client_secret_decode,authorized_grant_types,web_server_redirect_uri)values ('client','all','$2a$10$NdNNn2kcTo06LQwO.MwLhOwRw36w5j0XeQNQSPOpmf16l1c6GJFW6','server','authorization_code,client_credentials,password,refresh_token,implicit','');
+insert into oauth_client_details (client_id,scope,client_secret,client_secret_decode,authorized_grant_types,web_server_redirect_uri)values ('password_client','all','$2a$10$NdNNn2kcTo06LQwO.MwLhOwRw36w5j0XeQNQSPOpmf16l1c6GJFW6','server','authorization_code,client_credentials,password,refresh_token,implicit','');
+insert into oauth_client_details (client_id,scope,client_secret,client_secret_decode,authorized_grant_types,web_server_redirect_uri)values ('client_credentials','all','$2a$10$NdNNn2kcTo06LQwO.MwLhOwRw36w5j0XeQNQSPOpmf16l1c6GJFW6','server','authorization_code,client_credentials,password,refresh_token,implicit','');
+insert into oauth_client_details (client_id,scope,client_secret,client_secret_decode,authorized_grant_types,web_server_redirect_uri)values ('authorization_code','all','$2a$10$NdNNn2kcTo06LQwO.MwLhOwRw36w5j0XeQNQSPOpmf16l1c6GJFW6','server','authorization_code,refresh_token','');

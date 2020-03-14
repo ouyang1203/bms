@@ -17,7 +17,15 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import com.alibaba.druid.pool.DruidDataSource;
 
-
+/**
+ * 获取token范例
+ * password模式：localhost:3355/oauth/token?client_id=password_client&client_secret=server&grant_type=password&username=admin1&password=123456
+ * refresh_token:localhost:3355/oauth/token?client_id=password_client&client_secret=server&grant_type=refresh_token&refresh_token=cbd9b246-d7f1-46b9-af30-144e21663527
+ * client_credentials:localhost:3355/oauth/token?client_id=client_credentials&client_secret=server&grant_type=client_credentials
+ * authorization_code:
+ * 		1、获取code:http://localhost:3355/oauth/authorize?response_type=code&client_id=authorization_code&redirect_uri=http://www.baidu.com
+ * 		2、获取token:http://localhost:3355/oauth/token?client_id=authorization_code&client_secret=server&grant_type=authorization_code&redirect_uri=http://www.baidu.com&code=W0k3pd
+ * */
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableAuthorizationServer
