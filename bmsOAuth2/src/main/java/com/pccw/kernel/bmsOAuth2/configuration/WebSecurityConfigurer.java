@@ -28,9 +28,11 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter{
 	 protected void configure(HttpSecurity http) throws Exception {
 		 http
 		 	.authorizeRequests()
-		 	.antMatchers("/actuator/","/oauth/**","/oauth/authorize").permitAll()
+		 	//设置不拦截的地址
+		 	.antMatchers("/actuator/**","/oauth/**","/oauth/authorize").permitAll()
 		 	.anyRequest().authenticated()
 		 	.and().formLogin().permitAll()
+		 	//关闭跨域访问
 		 	.and().csrf().disable();
 		 
 	 }
