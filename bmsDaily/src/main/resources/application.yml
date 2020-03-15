@@ -42,3 +42,21 @@ logging:
         cloud: TRACE
 #mybatis:
   #mapper-locations: classpath:mapper/*.xml
+security:
+  oauth2:
+    client:
+      client-id: daily
+      client-secret: server
+      user-authorization-uri: http://localhost:3355/oauth/authorize
+      access-token-uri: http://localhost:3355/oauth/token
+    resource:
+      id: daily
+      user-info-uri: server
+    authorization:
+      check-token-access: http://localhost:3355/oauth/check_token
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          strategy: SEMAPHORE

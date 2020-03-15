@@ -5,6 +5,9 @@ import java.math.BigDecimal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.provider.authentication.OAuth2AuthenticationDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -62,6 +65,13 @@ public class DailyController {
 	@GetMapping(value="/testGet")
 	public String testGet(@RequestParam String name,@RequestParam String code) {
 		return annualFeignService.testAnnualGet(name,code);
+	}
+	@GetMapping(value = "/oauth2Test")
+	@PreAuthorize("hasAuthority('other')")
+	public String oauth2Test(Authentication authentication) {
+        OAuth2AuthenticationDetails details = (OAuth2AuthenticationDetails)authentication.getDetails();
+        String token = details.getTokenValue();
+        return token;
 	}
 	
 }

@@ -6,7 +6,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "GATEWAY",fallback=AnnualFeignServiceHystric.class)
+import com.pccw.kernel.bmsDaily.interceptor.FeignConfiguration;
+
+@FeignClient(value = "GATEWAY",fallback=AnnualFeignServiceHystric.class,configuration=FeignConfiguration.class)
 public interface AnnualFeignService {
 	/**
 	 * 根据日常参数查询对应科目下达金额

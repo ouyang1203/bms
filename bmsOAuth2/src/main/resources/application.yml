@@ -46,4 +46,4 @@ oauth2:
   token:
     validity:
       #secends: 3000000
-      secends: 10
+      secends: 60
