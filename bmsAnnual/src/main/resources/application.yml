@@ -2,7 +2,7 @@ spring:
   profiles:
     active: instance1
   application:
-    name: oauth2
+    name: annual
   datasource:
      username: root
      password: oyh1203oy
@@ -42,8 +42,3 @@ logging:
         cloud: TRACE
 #mybatis:
   #mapper-locations: classpath:mapper/*.xml
-oauth2:
-  token:
-    validity:
-      #secends: 3000000
-      secends: 10
