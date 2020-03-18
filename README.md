@@ -1,5 +1,5 @@
 # bms
-## 1、本项目采用springcloud开源框架搭建，其中springboot版本为：2.0.3.RELEASE，springcloud版本为：Finchley.RELEASE
+## 1、本项目采用springcloud开源框架搭建，其中springboot版本为：2.0.3.RELEASE，springcloud版本为：Finchley.RELEASE，oauth2鉴权在当前版本中是下发到各实际应用中调用鉴权中心来实现认证
 ## 2、目前使用的模块有：Eurzka,feign,springcloud gateway
 ## 3、bmsGateway中实现了动态路由（路由的增删改，路由数据存储于mysql中），同时在当前模块中将记录所有经过gateway网关的请求日志（目前输出到日志文件中，后续可根据实际需求存到mysql数据库中）,gateway服务返回均为JSON
 ## 4、bmsGateway中提供的服务

@@ -19,7 +19,6 @@
 //*
 //* 核心配置类，加载数据库的路由配置信息到redis
 //* 将定义好的路由表信息通过此类读写到redis中
-//* 调试过程中发现开启这个注解则会导致路由功能失效,不使用
 //*/
 //@Component
 //public class RedisRouteDefinitionRepository implements RouteDefinitionRepository {

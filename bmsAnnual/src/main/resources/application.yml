@@ -47,10 +47,10 @@ security:
     client:
       client-id: annual
       client-secret: server
-      user-authorization-uri: http://localhost:3355/oauth/authorize
-      access-token-uri: http://localhost:3355/oauth/token
+      #user-authorization-uri: http://localhost:3355/oauth/authorize
+      #access-token-uri: http://localhost:3355/oauth/token
     resource:
-      id: daily
+      id: annual
       user-info-uri: server
     authorization:
-      check-token-access: http://localhost:3355/oauth/check_token
+      check-token-access: http://localhost:5555/oauth_service/oauth/check_token

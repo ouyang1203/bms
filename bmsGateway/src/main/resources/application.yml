@@ -55,6 +55,14 @@ spring:
            filters:
              #截取路径位数
              - StripPrefix=1
+         - id: oauth2-service
+           uri: lb://OAUTH2
+           predicates:
+             #转发地址格式为/oauth_service/oauth/**,/oauth_service部分会被下面的过滤器给截取掉
+             - Path=/oauth_service/oauth/**
+           filters:
+             #截取路径位数
+             - StripPrefix=1
 eureka:
   client:
     fetch-registry: true

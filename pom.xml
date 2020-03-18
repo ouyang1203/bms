@@ -70,18 +70,6 @@
 	    <artifactId>spring-boot-starter-actuator</artifactId>
 	</dependency>
 	<!-- 	开启gateway自带的endpoint -->
-	  <!-- 	引入OAuth2 ,需要排除spring-boot-starter-web,避免gateway服务启动报错-->
-<!--     <dependency> -->
-<!--        <groupId>org.springframework.cloud</groupId> -->
-<!--        <artifactId>spring-cloud-starter-oauth2</artifactId> -->
-<!--        <exclusions> -->
-<!-- 			<exclusion> -->
-<!-- 				<groupId>org.springframework.boot</groupId> -->
-<!--         		<artifactId>spring-boot-starter-web</artifactId> -->
-<!-- 			</exclusion> -->
-<!--        </exclusions> -->
-<!--     </dependency> -->
-    <!-- 	引入OAuth2 -->
 	<dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-data-redis</artifactId>

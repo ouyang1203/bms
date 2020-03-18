@@ -47,3 +47,8 @@ oauth2:
     validity:
       #secends: 3000000
       secends: 60
+    keyStore:
+      key:
+        fullname: tbmbms.jks
+        alias: bms
+      password: tbmbms

@@ -1,0 +1,129 @@
+package com.pccw.kernel.bmsOAuth2.configuration;
+
+import java.security.KeyPair;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.oauth2.provider.client.JdbcClientDetailsService;
+import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
+
+@Configuration
+public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdapter{
+	
+	@Value("${oauth2.token.validity.secends}")
+	private Integer AccessTokenValiditySeconds;
+	//JWT所使用的私钥名字
+	@Value("${oauth2.token.keyStore.key.fullname}")
+	private String jwtkeyStoreKeyFullName;
+	//JWT所使用的私钥别名
+	@Value("${oauth2.token.keyStore.key.alias}")
+	private String jwtkeyStoreKeyAlias;
+	//JWT所使用的私钥密码
+	@Value("${oauth2.token.keyStore.password}")
+	private String jwtkeyStorePassword;
+	
+	
+	 /**
+     * 注入authenticationManager
+     * 来支持 password grant type
+     */
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    
+	@Autowired
+	private DataSource dataSource;
+    
+    @Bean // 声明 ClientDetails实现(所有客户端信息存在数据库中)
+	public ClientDetailsService clientDetailsService(){
+		return new JdbcClientDetailsService(dataSource);
+	} 
+	@Bean
+	// 声明TokenStore实现
+	public TokenStore tokenStore(){
+		return new JdbcTokenStore(dataSource);
+	} 
+    /**
+	 * 用来配置授权（authorization）以及令牌（token）的访问端点和令牌服务(token services)。
+	 * */
+    @Override
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        endpoints.authenticationManager(authenticationManager);
+        endpoints.allowedTokenEndpointRequestMethods(HttpMethod.GET, HttpMethod.POST);
+        endpoints.tokenStore(tokenStore());
+        
+        // 配置TokenServices参数
+        DefaultTokenServices tokenServices = new DefaultTokenServices();
+        tokenServices.setTokenStore(endpoints.getTokenStore());
+        //设置支持refresh_token模式,默认值为false,不支持,需要设置为true
+        tokenServices.setSupportRefreshToken(true);
+        tokenServices.setClientDetailsService(endpoints.getClientDetailsService());
+//        tokenServices.setTokenEnhancer(endpoints.getTokenEnhancer());
+        //设置JWT格式token
+        tokenServices.setTokenEnhancer(accessTokenConverter());
+        //设置token失效时间
+        tokenServices.setAccessTokenValiditySeconds(AccessTokenValiditySeconds);
+        endpoints.tokenServices(tokenServices);
+    }
+    
+    
+    @Override
+    public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+        oauthServer
+                .tokenKeyAccess("permitAll()") //url:/oauth/token_key,exposes public key for token verification if using JWT tokens
+                .checkTokenAccess("isAuthenticated()") //url:/oauth/check_token allow check token
+                .allowFormAuthenticationForClients();
+    }
+    
+    @Override
+    public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
+        clients.jdbc(dataSource);
+    }
+    /**
+     * 设置JWT所使用的私钥
+     * */
+    @Bean
+    public KeyPair keyPair() {
+        KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(new ClassPathResource(jwtkeyStoreKeyFullName), jwtkeyStorePassword.toCharArray());
+        return keyStoreKeyFactory.getKeyPair(jwtkeyStoreKeyAlias, jwtkeyStorePassword.toCharArray());
+    }
+    /**
+     * 向token中添加用户信息
+     * */
+    @Bean
+    public JwtAccessTokenConverter accessTokenConverter() {
+        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter(){
+        	@Override
+			public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
+				String userName = authentication.getUserAuthentication().getName();
+				final Map<String, Object> additionalInformation = new HashMap<String, Object>();
+				additionalInformation.put("user_name", userName);
+				((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalInformation);
+				OAuth2AccessToken token = super.enhance(accessToken, authentication);
+				return token;
+			} 
+        };
+        jwtAccessTokenConverter.setKeyPair(keyPair());
+        return jwtAccessTokenConverter;
+    }
+}
